@@ -4,6 +4,7 @@ dotenv.config();
 
 import express from 'express';
 import cors from 'cors';
+import resolveRouter from './routes/resolve';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -15,6 +16,9 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Register Resolve API Routes
+app.use('/api', resolveRouter);
 
 // Health Check Route
 app.get('/api/health', (req, res) => {

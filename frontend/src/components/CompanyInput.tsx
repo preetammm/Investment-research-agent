@@ -165,16 +165,21 @@ export const CompanyInput = () => {
                 className="w-full flex flex-col items-center space-y-4 pt-6 border-t border-slate-light"
               >
                 <p className="font-sans text-sm text-ink-soft">
-                  Did you mean <span className="italic font-serif text-ink font-semibold">{resolvedName}</span> or one of these alternatives?
+                  {resolvedName
+                    ? <>Did you mean <span className="italic font-serif text-ink font-semibold">{resolvedName}</span> or one of these?</>
+                    : <>Did you mean one of these companies?</>
+                  }
                 </p>
                 <div className="flex flex-wrap justify-center gap-3 w-full">
-                  <button
-                    type="button"
-                    onClick={() => handleSelection(resolvedName)}
-                    className="bg-paper hover:bg-slate-light text-ink border border-ink/10 font-mono text-xs py-2.5 px-4 transition-all duration-300 hover:border-ink rounded-sm cursor-pointer"
-                  >
-                    {resolvedName}
-                  </button>
+                  {resolvedName && (
+                    <button
+                      type="button"
+                      onClick={() => handleSelection(resolvedName)}
+                      className="bg-paper hover:bg-slate-light text-ink border border-ink/10 font-mono text-xs py-2.5 px-4 transition-all duration-300 hover:border-ink rounded-sm cursor-pointer"
+                    >
+                      {resolvedName}
+                    </button>
+                  )}
                   {alternatives.map((alt) => (
                     <button
                       key={alt}

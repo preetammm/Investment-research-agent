@@ -62,7 +62,7 @@ export async function callText(options: CallOptions): Promise<string> {
     try {
       const groq = getGroqClient();
       const completion = await groq.chat.completions.create({
-        model: 'qwen/qwen3-32b',
+        model: 'llama-3.3-70b-versatile',
         messages: [
           { role: 'system', content: system },
           { role: 'user', content: user },

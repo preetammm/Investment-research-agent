@@ -1,10 +1,12 @@
 import dotenv from 'dotenv';
 // Load environment variables at the very top of the entry point
-dotenv.config();
+// override: true ensures .env values take priority over system env vars
+dotenv.config({ override: true });
 
 import express from 'express';
 import cors from 'cors';
 import resolveRouter from './routes/resolve';
+import researchRouter from './routes/research';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -17,8 +19,9 @@ app.use(cors({
 
 app.use(express.json());
 
-// Register Resolve API Routes
+// Register Resolve and Research API Routes
 app.use('/api', resolveRouter);
+app.use('/api', researchRouter);
 
 // Health Check Route
 app.get('/api/health', (req, res) => {

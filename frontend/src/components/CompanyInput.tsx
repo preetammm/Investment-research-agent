@@ -1,7 +1,11 @@
 import { useState, type FormEvent } from 'react';
 import { motion, type Variants, AnimatePresence } from 'framer-motion';
 
-export const CompanyInput = () => {
+interface CompanyInputProps {
+  onCompanyConfirmed: (name: string) => void;
+}
+
+export const CompanyInput = ({ onCompanyConfirmed }: CompanyInputProps) => {
   const [companyName, setCompanyName] = useState('');
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<'idle' | 'confirmed' | 'ambiguous' | 'unrecognized'>('idle');
@@ -41,7 +45,7 @@ export const CompanyInput = () => {
       if (data.status === 'confirmed') {
         // Show brief searching state then proceed
         setTimeout(() => {
-          console.log(`Would proceed to research ${data.correctedName}`);
+          onCompanyConfirmed(data.correctedName);
           setStatus('idle');
           setCompanyName('');
         }, 1500);
@@ -56,7 +60,7 @@ export const CompanyInput = () => {
   };
 
   const handleSelection = (name: string) => {
-    console.log(`Would proceed to research ${name}`);
+    onCompanyConfirmed(name);
     setStatus('idle');
     setCompanyName('');
   };

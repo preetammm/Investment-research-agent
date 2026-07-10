@@ -1,0 +1,16 @@
+{
+  "private": true,
+  "name": "investment-research-agent",
+  "version": "1.0.0",
+  "description": "AI-powered investment research agent with multi-agent pipeline",
+  "scripts": {
+    "dev:frontend": "cd frontend && npm run dev",
+    "dev:backend": "cd backend && npm run dev",
+    "build:frontend": "cd frontend && npm run build",
+    "build:backend": "cd backend && npm run build",
+    "vercel-build": "npm install --prefix backend && npm install --prefix frontend && cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "@vercel/node": "^5.1.8"
+  }
+}

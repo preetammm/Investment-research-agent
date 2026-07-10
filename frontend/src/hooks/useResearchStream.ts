@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { StepId, CompanyDossier } from '../types/research';
+import type { StepId, ResearchState } from '../types/research';
 
 export type StepStatus = 'pending' | 'active' | 'done';
 
@@ -9,18 +9,22 @@ const INITIAL_STEPS: Record<StepId, StepStatus> = {
   reading_news: 'pending',
   checking_competitors: 'pending',
   merging_dossier: 'pending',
+  identifying_risks: 'pending',
+  evaluating_health: 'pending',
+  building_thesis: 'pending',
+  final_recommendation: 'pending',
 };
 
 export function useResearchStream() {
   const [steps, setSteps] = useState<Record<StepId, StepStatus>>(INITIAL_STEPS);
-  const [dossier, setDossier] = useState<CompanyDossier | null>(null);
+  const [researchState, setResearchState] = useState<ResearchState | null>(null);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const startResearch = useCallback(async (companyName: string) => {
     setIsStreaming(true);
     setError(null);
-    setDossier(null);
+    setResearchState(null);
     setSteps({ ...INITIAL_STEPS });
 
     try {
@@ -68,7 +72,7 @@ export function useResearchStream() {
                   [event.step]: event.status,
                 }));
               } else if (event.type === 'result') {
-                setDossier(event.dossier);
+                setResearchState(event.state);
               } else if (event.type === 'error') {
                 setError(event.error || 'An error occurred during research');
               }
@@ -88,7 +92,7 @@ export function useResearchStream() {
 
   return {
     steps,
-    dossier,
+    researchState,
     isStreaming,
     error,
     startResearch,

@@ -2,9 +2,9 @@ import { callJSON } from '../lib/llm';
 import { webSearch, SearchResult } from '../lib/search';
 import { SourcedFact, CompanyDossier, StepEvent, StepId } from './types';
 
-async function callJSONWithRetry<T>(options: { system: string; user: string; maxTokens?: number }, retries = 5, delayMs = 10000): Promise<T> {
+export async function callJSONWithRetry<T>(options: { system: string; user: string; maxTokens?: number }, retries = 3, delayMs = 2000): Promise<T> {
   try {
-    return await callJSON<T>({ maxTokens: 1500, ...options });
+    return await callJSON<T>({ maxTokens: 2048, ...options });
   } catch (error: any) {
     const errorStr = String(error.message || error);
     if (retries > 0) {
@@ -225,12 +225,8 @@ export async function runResearchTools(
   });
 
   // Helper to run a tool, report completion, and return result
-  const runAndReport = async <T>(step: StepId, toolFn: () => Promise<T>, delayMs = 0): Promise<T> => {
+  const runAndReport = async <T>(step: StepId, toolFn: () => Promise<T>): Promise<T> => {
     try {
-      if (delayMs > 0) {
-        console.log(`[orchestrator]: Staggering step ${step} by ${delayMs}ms...`);
-        await new Promise((resolve) => setTimeout(resolve, delayMs));
-      }
       const result = await toolFn();
       onStep({ type: 'step', step, status: 'done' });
       return result;
@@ -241,12 +237,12 @@ export async function runResearchTools(
     }
   };
 
-  // 2. Run all 4 tools in parallel with staggered start delays
+  // 2. Run all 4 tools in parallel (no stagger delays)
   const [infoFacts, financialFacts, newsFacts, competitorData] = await Promise.all([
-    runAndReport('finding_company', () => companyInfoTool(companyName), 0),
-    runAndReport('fetching_financials', () => financialsTool(companyName), 1500),
-    runAndReport('reading_news', () => newsTool(companyName), 3000),
-    runAndReport('checking_competitors', () => competitorTool(companyName), 4500),
+    runAndReport('finding_company', () => companyInfoTool(companyName)),
+    runAndReport('fetching_financials', () => financialsTool(companyName)),
+    runAndReport('reading_news', () => newsTool(companyName)),
+    runAndReport('checking_competitors', () => competitorTool(companyName)),
   ]);
 
   const isEmpty =

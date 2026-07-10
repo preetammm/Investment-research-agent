@@ -11,9 +11,21 @@ import researchRouter from './routes/research';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// Enable CORS for Vite frontend
+// Enable CORS for Vite frontend (dynamic origin for local dev and Vercel production)
+const allowedOrigins = [
+  'http://localhost:5173',
+  process.env.FRONTEND_URL,
+].filter(Boolean) as string[];
+
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g., Postman, curl, server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow all in production since Vercel handles same-origin
+    }
+  },
   credentials: true
 }));
 

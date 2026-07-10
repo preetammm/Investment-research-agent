@@ -18,6 +18,10 @@ const STEPS: StepConfig[] = [
   { id: 'reading_news', label: 'Reading latest news' },
   { id: 'checking_competitors', label: 'Checking the competitive landscape' },
   { id: 'merging_dossier', label: 'Merging into final dossier' },
+  { id: 'identifying_risks', label: 'Identifying risk vectors' },
+  { id: 'evaluating_health', label: 'Evaluating financial and moat health' },
+  { id: 'building_thesis', label: 'Synthesizing investment thesis' },
+  { id: 'final_recommendation', label: 'Formulating final recommendation' },
 ];
 
 export const InvestigationFlow = ({ steps, companyName }: InvestigationFlowProps) => {

@@ -1,13 +1,29 @@
-import { Router, Request, Response } from 'express';
-import { graph } from '../agents/graph';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import dotenv from 'dotenv';
+import path from 'path';
 
-const router = Router();
+// Load environment variables
+dotenv.config({ path: path.join(__dirname, '../backend/.env'), override: true });
 
-/**
- * POST /api/research
- * Streams the progress of company research via Server-Sent Events (SSE).
- */
-router.post('/research', async (req: Request, res: Response): Promise<any> => {
+import { graph } from '../backend/src/agents/graph';
+
+export const config = {
+  maxDuration: 60, // Allow up to 60 seconds for the research pipeline
+};
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    return res.status(200).end();
+  }
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' });
+  }
+
   const { companyName } = req.body;
 
   if (!companyName || typeof companyName !== 'string' || !companyName.trim()) {
@@ -15,14 +31,10 @@ router.post('/research', async (req: Request, res: Response): Promise<any> => {
   }
 
   // Set SSE response headers
-  res.writeHead(200, {
-    'Content-Type': 'text/event-stream',
-    'Cache-Control': 'no-cache',
-    'Connection': 'keep-alive',
-  });
-
-  // Flush headers if the compression middleware or custom setting is present
-  res.flushHeaders();
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
   console.log(`[sse]: Starting research pipeline for "${companyName}"`);
 
@@ -47,12 +59,9 @@ router.post('/research', async (req: Request, res: Response): Promise<any> => {
     res.write(`data: ${JSON.stringify(finalEvent)}\n\n`);
   } catch (error: any) {
     console.error(`[sse]: Error during research for "${companyName}":`, error);
-    // Send error event
     res.write(`data: ${JSON.stringify({ type: 'error', error: error.message || String(error) })}\n\n`);
   } finally {
     console.log(`[sse]: Ending stream for "${companyName}"`);
     res.end();
   }
-});
-
-export default router;
+}

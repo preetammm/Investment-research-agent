@@ -61,16 +61,30 @@ export async function callText(options: CallOptions): Promise<string> {
     // 2. Fallback to Groq
     try {
       const groq = getGroqClient();
-      const completion = await groq.chat.completions.create({
-        model: 'llama-3.3-70b-versatile',
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
-        max_tokens: maxTokens,
-      });
+      let text = '';
+      try {
+        const completion = await groq.chat.completions.create({
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            { role: 'system', content: system },
+            { role: 'user', content: user },
+          ],
+          max_tokens: maxTokens,
+        });
+        text = completion.choices[0]?.message?.content || '';
+      } catch (firstGroqError: any) {
+        console.warn(`[groq-fallback]: Llama 3.3 failed, falling back to Llama 3.1 8B: ${firstGroqError.message || firstGroqError}`);
+        const completion = await groq.chat.completions.create({
+          model: 'llama-3.1-8b-instant',
+          messages: [
+            { role: 'system', content: system },
+            { role: 'user', content: user },
+          ],
+          max_tokens: maxTokens,
+        });
+        text = completion.choices[0]?.message?.content || '';
+      }
 
-      const text = completion.choices[0]?.message?.content || '';
       if (!text) {
         throw new Error('Groq returned an empty response');
       }
@@ -112,7 +126,38 @@ export async function callJSON<T>(options: CallOptions): Promise<T> {
   cleaned = cleaned.trim();
 
   try {
-    return JSON.parse(cleaned) as T;
+    // Sanitize unescaped newlines in JSON string literals
+    let sanitized = '';
+    let inString = false;
+    let escape = false;
+
+    for (let i = 0; i < cleaned.length; i++) {
+      const char = cleaned[i];
+      if (escape) {
+        sanitized += char;
+        escape = false;
+        continue;
+      }
+      if (char === '\\') {
+        sanitized += char;
+        escape = true;
+        continue;
+      }
+      if (char === '"') {
+        inString = !inString;
+        sanitized += char;
+        continue;
+      }
+      if (inString && (char === '\n' || char === '\r')) {
+        if (char === '\n') {
+          sanitized += '\\n';
+        }
+        continue;
+      }
+      sanitized += char;
+    }
+
+    return JSON.parse(sanitized) as T;
   } catch (parseError: any) {
     console.error(`Failed to parse JSON response. Raw text was:\n${rawText}\nCleaned text was:\n${cleaned}`);
     throw new Error(`LLM output could not be parsed as JSON: ${parseError.message}`);

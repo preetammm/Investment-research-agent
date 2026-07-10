@@ -71,7 +71,7 @@ export const ExplainButton = ({ companyName, thesis, dossier }: ExplainButtonPro
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] as const }}
             className="overflow-hidden"
           >
             {/* Mode pills */}

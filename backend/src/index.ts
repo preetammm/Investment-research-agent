@@ -17,7 +17,8 @@ const PORT = process.env.PORT || 4000;
 const allowedOrigins = [
   'http://localhost:5173',
   process.env.FRONTEND_URL,
-].filter(Boolean).map(url => url.replace(/\/$/, '')) as string[];
+].filter((url): url is string => Boolean(url))
+ .map(url => url.replace(/\/$/, ''));
 
 app.use(cors({
   origin: (origin, callback) => {

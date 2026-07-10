@@ -22,11 +22,11 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (e.g., Postman, curl, server-to-server)
+    console.log(`[CORS] Origin: "${origin}" | Allowed: ${JSON.stringify(allowedOrigins)}`);
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error(`Not allowed by CORS: Origin "${origin}" not in allowed list ${JSON.stringify(allowedOrigins)}`));
     }
   },
   credentials: true

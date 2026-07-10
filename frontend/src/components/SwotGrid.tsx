@@ -23,7 +23,7 @@ export const SwotGrid = ({ swot }: SwotGridProps) => {
         SWOT
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {quadrants.map((q) => {
           const items = swot[q.key];
           return (

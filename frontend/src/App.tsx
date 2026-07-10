@@ -39,9 +39,9 @@ function App() {
   return (
     <div className="min-h-screen bg-paper text-ink selection:bg-invest-soft flex flex-col justify-between">
       {/* Header */}
-      <header className="w-full max-w-6xl mx-auto px-6 py-6 flex justify-between items-center border-b border-slate-light">
-        <span className="font-mono text-xs tracking-wider text-ink font-bold">RESEARCH_AGENT_V1.0</span>
-        <span className="font-mono text-xs text-ink-faint">DAY_6_EXPLAIN_&_CHAT</span>
+      <header className="w-full max-w-[720px] mx-auto px-6 py-6 flex justify-between items-center border-b border-slate-light">
+        <span className="font-mono text-xs tracking-widest text-ink font-bold">DOSSIER</span>
+        <span className="font-mono text-xs text-ink-faint">INVESTMENT_RESEARCH</span>
       </header>
 
       {/* Main Content */}
@@ -49,7 +49,7 @@ function App() {
         {!selectedCompany ? (
           <CompanyInput onCompanyConfirmed={handleCompanyConfirmed} />
         ) : (
-          <div className="w-full max-w-3xl flex flex-col items-center space-y-8">
+          <div className="w-full max-w-[720px] mx-auto flex flex-col items-center space-y-8">
             {/* Investigation progress */}
             {(isStreaming || !researchState) && (
               <div className="w-full">
@@ -68,10 +68,10 @@ function App() {
                 {/* ── ThesisCard ── */}
                 {researchState.thesis && (
                   <ThesisCard
-                    companyName={researchState.companyName}
-                    recommendation={researchState.thesis.recommendation}
-                    confidence={researchState.thesis.confidence}
-                    oneLineSummary={researchState.thesis.oneLineSummary}
+                     companyName={researchState.companyName}
+                     recommendation={researchState.thesis.recommendation}
+                     confidence={researchState.thesis.confidence}
+                     oneLineSummary={researchState.thesis.oneLineSummary}
                   />
                 )}
 
@@ -152,9 +152,8 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full max-w-6xl mx-auto px-6 py-6 flex justify-between items-center border-t border-slate-light text-ink-faint font-mono text-[10px] tracking-wide">
-        <span>© 2026 ANTIGRAVITY INVESTMENTS INC.</span>
-        <span>RESTRICTED ACCESS</span>
+      <footer className="w-full max-w-[720px] mx-auto px-6 py-6 flex justify-center items-center border-t border-slate-light text-ink-faint font-mono text-[10px] tracking-widest uppercase">
+        <span>DOSSIER</span>
       </footer>
     </div>
   );

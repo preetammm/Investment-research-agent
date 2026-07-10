@@ -46,10 +46,10 @@ export const InvestigationFlow = ({ steps, companyName }: InvestigationFlowProps
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="w-full max-w-xl mx-auto bg-paper border border-slate-light p-8 text-left font-sans select-none rounded-sm shadow-sm"
+      className="w-full max-w-xl mx-auto bg-paper border border-slate-light p-6 sm:p-8 text-left font-sans select-none rounded-sm shadow-sm"
     >
       {/* Dossier header metadata */}
-      <div className="flex justify-between items-center border-b border-slate-light pb-4 mb-6 font-mono text-[10px] tracking-widest text-ink-faint">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-slate-light pb-4 mb-6 font-mono text-[10px] tracking-widest text-ink-faint">
         <span>CASE FILE: #{companyName.toUpperCase().replace(/\s+/g, '_')}_INVESTIGATION</span>
         <span>STATUS: IN_PROGRESS</span>
       </div>

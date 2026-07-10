@@ -50,7 +50,7 @@ export const ThesisCard = ({
   };
 
   return (
-    <div className="w-full bg-paper border border-slate-light p-8 rounded-sm shadow-sm flex flex-col md:flex-row items-center md:items-start space-y-6 md:space-y-0 md:space-x-8 text-left select-none relative overflow-hidden">
+    <div className="w-full bg-paper border border-slate-light p-8 rounded-sm shadow-sm flex flex-col sm:flex-row items-center sm:items-start space-y-6 sm:space-y-0 sm:space-x-8 text-left select-none relative overflow-hidden">
       {/* Decorative vertical accent bar matching retro-editorial style */}
       <div
         className={`absolute top-0 left-0 bottom-0 w-1.5 ${

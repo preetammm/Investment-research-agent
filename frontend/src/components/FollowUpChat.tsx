@@ -106,7 +106,7 @@ export const FollowUpChat = ({ researchState }: FollowUpChatProps) => {
           onKeyDown={handleKeyDown}
           placeholder="Ask anything about this research…"
           disabled={isLoading}
-          className="flex-1 bg-transparent border border-slate-light px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-invest transition-colors rounded-sm disabled:opacity-50"
+          className="flex-1 min-w-0 bg-transparent border border-slate-light px-4 py-2.5 font-sans text-sm text-ink placeholder:text-ink-faint focus:outline-none focus:border-invest transition-colors rounded-sm disabled:opacity-50"
         />
         <button
           onClick={handleSubmit}

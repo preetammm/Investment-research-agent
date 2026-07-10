@@ -38,7 +38,7 @@ export const BullBearDebate = ({ debate }: BullBearDebateProps) => {
         BULL VS. BEAR
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
         {/* Bull Case */}
         <div>
           <h4 className="font-serif italic text-lg text-invest mb-4">

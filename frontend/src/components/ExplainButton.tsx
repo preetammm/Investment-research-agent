@@ -42,7 +42,12 @@ export const ExplainButton = ({ companyName, thesis, dossier }: ExplainButtonPro
   };
 
   return (
-    <section className="w-full text-left space-y-4">
+    <section className="w-full text-left space-y-6">
+      {/* Section header */}
+      <div className="border-b border-slate-light pb-3 font-mono text-[10px] tracking-widest text-ink-faint uppercase">
+        EXPLAIN THIS TO ME
+      </div>
+
       {/* Toggle button */}
       <button
         onClick={() => setIsOpen(!isOpen)}

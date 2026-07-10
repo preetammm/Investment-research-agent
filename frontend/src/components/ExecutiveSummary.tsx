@@ -59,7 +59,7 @@ export const ExecutiveSummary = ({ companyName, thesis }: ExecutiveSummaryProps)
           className="space-y-5"
         >
           {/* Row 1: Recommendation + Confidence */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <motion.div variants={itemVariants} className="space-y-1">
               <span className="font-mono text-[10px] tracking-widest text-ink-faint uppercase block">
                 Recommendation

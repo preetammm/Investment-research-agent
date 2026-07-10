@@ -47,15 +47,15 @@ export const EvidenceDashboard = ({ scores }: EvidenceDashboardProps) => {
         EVIDENCE DASHBOARD
       </div>
 
-      <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+      <div className="flex flex-col sm:flex-row gap-8 items-center sm:items-start">
         {/* Radar chart */}
-        <div className="w-full md:w-1/2 h-72">
+        <div className="w-full sm:w-1/2 h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <RadarChart cx="50%" cy="50%" outerRadius="70%" data={radarData}>
+            <RadarChart cx="50%" cy="50%" outerRadius="60%" data={radarData} margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
               <PolarGrid stroke="#E7EAF0" />
               <PolarAngleAxis
                 dataKey="dimension"
-                tick={{ fontSize: 11, fill: '#4A4E57', fontFamily: 'Inter, sans-serif' }}
+                tick={{ fontSize: 10, fill: '#4A4E57', fontFamily: 'Inter, sans-serif' }}
               />
               <PolarRadiusAxis
                 domain={[0, 10]}
@@ -76,7 +76,7 @@ export const EvidenceDashboard = ({ scores }: EvidenceDashboardProps) => {
         </div>
 
         {/* Progress bars */}
-        <div className="w-full md:w-1/2 space-y-4">
+        <div className="w-full sm:w-1/2 space-y-4">
           {barData.map((item, idx) => (
             <div key={item.label} className="space-y-1">
               <div className="flex justify-between items-baseline">

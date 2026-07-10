@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { ResearchState } from '../types/research';
-import { API_BASE_URL } from '../lib/config';
+import { apiPost } from '../lib/api';
 
 interface ChatMessage {
   role: 'user' | 'assistant';
@@ -43,17 +43,7 @@ export const FollowUpChat = ({ researchState }: FollowUpChatProps) => {
     ]);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/followup`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question, researchState, history }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
+      const data = await apiPost('/api/followup', { question, researchState, history });
       setTurns((prev) => [...prev, { question, answer: data.answer }]);
     } catch (err: any) {
       setError(err.message || 'Failed to get follow-up answer.');

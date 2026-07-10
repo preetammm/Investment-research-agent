@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { motion, type Variants, AnimatePresence } from 'framer-motion';
-import { API_BASE_URL } from '../lib/config';
+import { apiPost, ApiError } from '../lib/api';
 
 interface CompanyInputProps {
   onCompanyConfirmed: (name: string) => void;
@@ -26,19 +26,8 @@ export const CompanyInput = ({ onCompanyConfirmed }: CompanyInputProps) => {
     setAlternatives([]);
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/resolve`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ companyName: query }),
-      });
+      const data = await apiPost('/api/resolve', { companyName: query });
 
-      if (!response.ok) {
-        throw new Error(`Server returned error: ${response.statusText}`);
-      }
-
-      const data = await response.json();
       setStatus(data.status);
       setResolvedName(data.correctedName);
       setAlternatives(data.alternatives);
@@ -53,7 +42,11 @@ export const CompanyInput = ({ onCompanyConfirmed }: CompanyInputProps) => {
       }
     } catch (err: any) {
       console.error('Error resolving company name:', err);
-      setErrorMessage(err.message || 'Something went wrong. Please try again.');
+      if (err instanceof ApiError && (err.isTimeout || err.isNetworkError)) {
+        setErrorMessage('Server is waking up — please wait a moment and try again.');
+      } else {
+        setErrorMessage(err.message || 'Something went wrong. Please try again.');
+      }
       setStatus('unrecognized');
     } finally {
       setLoading(false);

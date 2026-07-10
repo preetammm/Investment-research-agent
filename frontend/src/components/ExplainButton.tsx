@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { InvestmentThesis, CompanyDossier } from '../types/research';
-import { API_BASE_URL } from '../lib/config';
+import { apiPost } from '../lib/api';
 
 type AudienceMode = 'simple' | 'beginner' | 'investor' | 'analyst';
 
@@ -32,17 +32,7 @@ export const ExplainButton = ({ companyName, thesis, dossier }: ExplainButtonPro
     setIsLoading(true);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/api/explain`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ companyName, thesis, dossier, mode }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}`);
-      }
-
-      const data = await res.json();
+      const data = await apiPost('/api/explain', { companyName, thesis, dossier, mode });
       setNarrative(data.narrative);
     } catch (err: any) {
       setError(err.message || 'Failed to generate explanation.');

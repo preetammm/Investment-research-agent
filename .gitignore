@@ -9,13 +9,14 @@ dist-ssr/
 build/
 out/
 
-# Environment files
+# Environment files (secrets only)
 .env
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-*.env
+# Note: .env.development and .env.production are tracked intentionally
+# They contain only public URLs, no secrets
 
 # Logs
 logs

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CompanyInput } from './components/CompanyInput';
 import { InvestigationFlow } from './components/InvestigationFlow';
 import { useResearchStream } from './hooks/useResearchStream';
@@ -11,10 +11,16 @@ import { BullBearDebate } from './components/BullBearDebate';
 import { ExplainButton } from './components/ExplainButton';
 import { FollowUpChat } from './components/FollowUpChat';
 import { ExecutiveSummary } from './components/ExecutiveSummary';
+import { warmUpBackend } from './lib/api';
 
 function App() {
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
   const { steps, researchState, isStreaming, error, startResearch } = useResearchStream();
+
+  // Wake up the Render backend on page load (handles cold starts)
+  useEffect(() => {
+    warmUpBackend();
+  }, []);
 
   const handleCompanyConfirmed = (companyName: string) => {
     setSelectedCompany(companyName);

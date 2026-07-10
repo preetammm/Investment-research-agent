@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { StepId, ResearchState } from '../types/research';
-import { API_BASE_URL } from '../lib/config';
+import { apiFetch } from '../lib/api';
 
 export type StepStatus = 'pending' | 'active' | 'done';
 
@@ -29,17 +29,16 @@ export function useResearchStream() {
     setSteps({ ...INITIAL_STEPS });
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/research`, {
+      // Use apiFetch with a longer timeout for the research pipeline (up to 120s)
+      const response = await apiFetch<Response>('/api/research', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ companyName }),
+        timeoutMs: 120_000,
+        retries: 2,
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
 
       if (!response.body) {
         throw new Error('ReadableStream not supported on response.');

@@ -8,6 +8,7 @@ import {
   InvestmentThesis,
 } from './types';
 import { callJSONWithRetry } from './researchTools';
+import { stripDossierForLLM } from '../lib/llm';
 
 const VERDICT_SYSTEM = `You are the Investment Committee Chair at an elite venture capital and private equity firm.
 Your task is to synthesize the Company Dossier and the Bull/Bear debate into a final, definitive investment thesis.
@@ -126,7 +127,7 @@ export async function runVerdictAgent(
     user: `Please analyze the following Company Dossier and Bull/Bear Debate to formulate the final verdict.
 
 Dossier:
-${JSON.stringify(dossier, null, 2)}
+${JSON.stringify(stripDossierForLLM(dossier), null, 2)}
 
 Debate:
 ${JSON.stringify(debate, null, 2)}`,

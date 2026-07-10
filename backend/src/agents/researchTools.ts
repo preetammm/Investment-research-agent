@@ -128,7 +128,12 @@ You must return a JSON object with this exact shape:
 
 function formatSearchResults(results: SearchResult[]): string {
   return results
-    .map((r, i) => `[Source ${i + 1}] Title: ${r.title}\nURL: ${r.url}\nContent: ${r.content}\n---`)
+    .map((r, i) => {
+      const title = r.title || '';
+      const url = r.url || '';
+      const content = (r.content || '').slice(0, 800);
+      return `[Source ${i + 1}] Title: ${title}\nURL: ${url}\nContent: ${content}\n---`;
+    })
     .join('\n\n');
 }
 

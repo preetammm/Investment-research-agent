@@ -5,7 +5,7 @@ import path from 'path';
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '../backend/.env'), override: true });
 
-import { callChat, ChatMessage } from '../backend/src/lib/llm';
+import { callChat, ChatMessage, stripResearchStateForLLM } from '../backend/src/lib/llm';
 
 const FOLLOWUP_SYSTEM = `You are a senior investment research analyst engaged in a follow-up conversation about a company that was just analyzed.
 
@@ -41,7 +41,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const system = `${FOLLOWUP_SYSTEM}
 
 RESEARCH STATE:
-${JSON.stringify(researchState, null, 2)}`;
+${JSON.stringify(stripResearchStateForLLM(researchState), null, 2)}`;
 
     // Take last 6 messages of prior history to stay within context limits
     const priorHistory: ChatMessage[] = Array.isArray(history)

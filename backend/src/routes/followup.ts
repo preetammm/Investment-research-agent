@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { callChat, ChatMessage } from '../lib/llm';
+import { callChat, ChatMessage, stripResearchStateForLLM } from '../lib/llm';
 
 const router = Router();
 
@@ -29,7 +29,7 @@ router.post('/followup', async (req: Request, res: Response): Promise<any> => {
     const system = `${FOLLOWUP_SYSTEM}
 
 RESEARCH STATE:
-${JSON.stringify(researchState, null, 2)}`;
+${JSON.stringify(stripResearchStateForLLM(researchState), null, 2)}`;
 
     // Take last 6 messages of prior history to stay within context limits
     const priorHistory: ChatMessage[] = Array.isArray(history)

@@ -1,5 +1,6 @@
 import { CompanyDossier, BullBearCase } from './types';
 import { callJSONWithRetry } from './researchTools';
+import { stripDossierForLLM } from '../lib/llm';
 
 const BULL_BEAR_SYSTEM = `You are a panel of two elite investment analysts debating a company's investment potential.
 - Analyst 1 (The Bull) argues strongly to INVEST, highlighting opportunities, growth, moats, and strengths.
@@ -42,7 +43,7 @@ export async function runBullBearAgent(dossier: CompanyDossier): Promise<BullBea
 
   const result = await callJSONWithRetry<BullBearCase>({
     system: BULL_BEAR_SYSTEM,
-    user: `Here is the Company Dossier for "${dossier.companyName}":\n\n${JSON.stringify(dossier, null, 2)}`,
+    user: `Here is the Company Dossier for "${dossier.companyName}":\n\n${JSON.stringify(stripDossierForLLM(dossier), null, 2)}`,
   });
 
   // Ensure sorting by severity descending

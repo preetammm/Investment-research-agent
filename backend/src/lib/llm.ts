@@ -258,3 +258,41 @@ export async function callChat(options: {
   }
 }
 
+/**
+ * Strips non-essential, highly verbose fields (like sourceUrl and confidence)
+ * from a dossier to dramatically reduce prompt token counts for LLM calls.
+ */
+export function stripDossierForLLM(dossier: any): any {
+  if (!dossier || typeof dossier !== 'object') return dossier;
+
+  const stripFact = (f: any) => {
+    if (!f || typeof f !== 'object') return f;
+    // Retain only label and value
+    return {
+      label: f.label,
+      value: f.value,
+    };
+  };
+
+  return {
+    ...dossier,
+    leadership: Array.isArray(dossier.leadership) ? dossier.leadership.map(stripFact) : undefined,
+    financials: Array.isArray(dossier.financials) ? dossier.financials.map(stripFact) : undefined,
+    recentNews: Array.isArray(dossier.recentNews) ? dossier.recentNews.map(stripFact) : undefined,
+    redFlags: Array.isArray(dossier.redFlags) ? dossier.redFlags.map(stripFact) : undefined,
+  };
+}
+
+/**
+ * Strips non-essential verbose fields from the entire research state for follow-up chat calls.
+ */
+export function stripResearchStateForLLM(state: any): any {
+  if (!state || typeof state !== 'object') return state;
+
+  return {
+    ...state,
+    dossier: stripDossierForLLM(state.dossier),
+  };
+}
+
+

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { StepId, ResearchState } from '../types/research';
+import { API_BASE_URL } from '../lib/config';
 
 export type StepStatus = 'pending' | 'active' | 'done';
 
@@ -28,7 +29,7 @@ export function useResearchStream() {
     setSteps({ ...INITIAL_STEPS });
 
     try {
-      const response = await fetch('http://localhost:4000/api/research', {
+      const response = await fetch(`${API_BASE_URL}/api/research`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

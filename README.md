@@ -1,156 +1,113 @@
 # Investment Research Agent
 
-An AI-powered editorial-style investment research agent that transforms a company name into a full investment thesis — complete with a radar-scored evidence dashboard, risk analysis, SWOT breakdown, and a structured bull/bear debate. Results stream in real-time via SSE as the multi-agent pipeline works through each stage.
+An AI-powered editorial-style corporate and investment research agent that automates company analysis. Users enter any company name, watch a multi-agent pipeline stream search and synthesis steps in real-time, and get a beautiful, unified dossier covering structured scores, risk analysis, SWOT matrix, and a bull vs. bear debate.
 
 ---
 
-## Project Structure
+## Overview
 
-```
-├── backend/                    # TypeScript Express server
-│   ├── src/agents/
-│   │   ├── companyResolverAgent.ts   # Fuzzy company-name resolution
-│   │   ├── researchTools.ts          # 4 parallel Tavily research extractors
-│   │   ├── bullBearAgent.ts          # Bull/Bear debate generator
-│   │   ├── verdictAgent.ts           # Verdict + scoring + SWOT + risks
-│   │   ├── graph.ts                  # LangGraph orchestration pipeline
-│   │   └── types.ts                  # Shared TypeScript contracts
-│   ├── src/lib/
-│   │   ├── llm.ts                    # LLM wrapper (Gemini → Groq fallback)
-│   │   └── search.ts                 # Tavily Search client
-│   ├── src/routes/
-│   │   └── research.ts               # SSE streaming endpoint
-│   └── src/index.ts                  # Express entry point
-├── frontend/                   # React + Vite UI
-│   ├── src/components/
-│   │   ├── CompanyInput.tsx          # Landing page company resolver input
-│   │   ├── InvestigationFlow.tsx     # Real-time step progress timeline
-│   │   ├── ThesisCard.tsx            # Hero verdict stamp + summary
-│   │   ├── StoryReport.tsx           # Analyst narrative (editorial paragraphs)
-│   │   ├── EvidenceDashboard.tsx     # Radar chart + animated progress bars
-│   │   ├── RiskAnalysis.tsx          # Severity-pill risk rows
-│   │   ├── SwotGrid.tsx             # 2×2 SWOT quadrant grid
-│   │   └── BullBearDebate.tsx        # Two-column debate with citations
-│   ├── src/hooks/
-│   │   └── useResearchStream.ts      # SSE ReadableStream consumer
-│   ├── src/types/
-│   │   └── research.ts              # Frontend type contracts
-│   └── src/App.tsx                   # Main app layout & component wiring
-├── api/                        # Vercel serverless functions
-├── vercel.json                 # Vercel deployment config
-└── README.md
-```
+The **Investment Research Agent** is a full-stack application designed to perform deep-dive corporate research. It automates the work of an equity research analyst: gathering data from the web, resolving company details, simulating debates between bull/bear perspectives, scoring fundamentals, and writing a cohesive narrative.
+
+It features a high-fidelity retro-editorial "case file" UI built with React, styled using custom Tailwind color tokens, and animated with Framer Motion. Data flows in real-time using Server-Sent Events (SSE) to display progress through the multi-agent pipeline.
 
 ---
 
-## Features & Build Timeline
-
-### Day 1–2: Foundation
-- Custom retro-editorial "case file" design system (Fraunces serif, Inter sans, IBM Plex Mono)
-- Tailwind theme with `paper`, `ink`, `invest`/`watch`/`pass` color tokens
-- Express backend skeleton with CORS and SSE support
-- Company Resolver agent — handles typos, shorthands, and ambiguous names
-- LLM fallback wrapper: primary Gemini Pro, secondary Groq (Llama 3.3 70B) with automatic failover
-
-### Day 3: Parallel Research & Streaming
-- 4 parallel Tavily-powered research extractors (Info, Financials, News, Competitors)
-- Rate-limit exponential backoff retry handler (`callJSONWithRetry`)
-- Real-time Server-Sent Events (SSE) streaming with 9 progress steps
-- Editorial timeline investigation flow showing live step transitions
-
-### Day 4: Decision Engine
-- **Bull/Bear Agent** — generates structured debate points with severity scores and evidence citations
-- **Verdict Agent** — produces investment recommendation (`Invest`/`Watch`/`Pass`), confidence score, SWOT analysis, risk assessment, 5-dimension scoring, and a full analyst narrative
-- **LangGraph pipeline** — orchestrates the full flow: Resolve → Research (parallel) → Bull/Bear → Verdict
-- **ThesisCard** — hero verdict stamp with animated confidence bar
-- **StoryReport** — editorial narrative with staggered paragraph animations
-
-### Day 5: Evidence Suite (Current)
-- **EvidenceDashboard** — Recharts RadarChart (5 dimensions: Market Opportunity, Financial Health, Execution, Moat, Risk inverted) + animated progress bars
-- **RiskAnalysis** — categorized risk rows with severity pills (low=watch/green, medium=invest/amber, high=pass/red), staggered fade-in animations
-- **SwotGrid** — responsive 2×2 grid with color-coded left borders (Strengths=invest, Weaknesses=pass, Opportunities=watch, Threats=slate)
-- **BullBearDebate** — two-column debate layout with "The case for" / "The case against" headers, each point citing its source via `basedOn`
-- Removed temporary raw JSON dump — all data now flows through proper components
-- Section dividers (1px slate-light) between each report section for a cohesive document feel
-
----
-
-## Tech Stack
-
-### Backend
-| Layer | Technology |
-|-------|-----------|
-| Framework | Express.js (TypeScript) |
-| AI / LLM | Google Gemini Pro + Groq (Llama 3.3 70B) fallback |
-| Web Search | Tavily Search API |
-| Orchestration | LangGraph (state machine pipeline) |
-| Dev Tools | Nodemon, ts-node |
-
-### Frontend
-| Layer | Technology |
-|-------|-----------|
-| Framework | React 19 (TypeScript) |
-| Build Tool | Vite |
-| Styling | Tailwind CSS v4 |
-| Animation | Framer Motion |
-| Charts | Recharts (RadarChart) |
-| Streaming | Fetch ReadableStream API (SSE) |
-
----
-
-## Getting Started
+## How to run it
 
 ### 1. Prerequisites
-- Node.js v18+
-- API keys for: Gemini, Groq, and Tavily Search
+- **Node.js** (v18 or higher recommended)
+- **Tavily Search API Key** (for web research)
+- **Google Gemini API Key** (Primary LLM)
+- **Groq API Key** (Fallback LLM)
 
 ### 2. Environment Setup
 
 Create a `.env` file in the `backend/` directory:
 ```env
 PORT=4000
-GEMINI_API_KEY=your_gemini_key
-GROQ_API_KEY=your_groq_key
-TAVILY_API_KEY=your_tavily_key
+GEMINI_API_KEY=your_gemini_key_here
+GROQ_API_KEY=your_groq_key_here
+TAVILY_API_KEY=your_tavily_key_here
 ```
 
-### 3. Installation & Run
+Create a `.env` file in the `frontend/` directory (or use `.env.development`):
+```env
+VITE_API_URL=http://localhost:4000
+```
 
-**Backend:**
+### 3. Running Locally
+
+#### Run the Backend Server:
 ```bash
 cd backend
 npm install
 npm run dev
 ```
-Server runs at `http://localhost:4000`.
+The backend server compiles TypeScript and starts on `http://localhost:4000`.
 
-**Frontend:**
+#### Run the Frontend Web App:
 ```bash
 cd frontend
 npm install
 npm run dev
 ```
-Open `http://localhost:5173` in your browser.
+The frontend Vite server starts on `http://localhost:5173`. Open it in your browser to run the app.
 
 ---
 
-## How It Works
+## How it works
 
-1. **Enter a company name** — the resolver handles typos and ambiguity
-2. **Watch the investigation unfold** — 9 streaming steps animate in real-time
-3. **Read the verdict** — a stamped recommendation (Invest / Watch / Pass) with confidence rating
-4. **Explore the evidence** — radar chart, risk breakdown, SWOT grid, and bull/bear debate
+The application is structured into a backend API and an interactive frontend SPA.
+
+### The Pipeline Architecture (LangGraph & Multi-Agent Node Flow)
+Orchestrated in `backend/src/agents/graph.ts`, the pipeline is structured as a LangGraph state machine:
+
+1. **Resolution Node (`companyResolverAgent.ts`)**: Cleans up the input name (e.g. "appl" -> "Apple", handles ambiguity by returning options, or flags unrecognized inputs).
+2. **Research Node (`researchTools.ts`)**: Spawns 4 parallel extractors querying Tavily:
+   - **Company Info Tool**: General overview, founding, leadership, and business model.
+   - **Financials Tool**: Funding rounds, revenue numbers, key investors, and valuation.
+   - **News Tool**: Recent controversies, news, regulatory inquiries, and layoffs.
+   - **Competitors Tool**: Competitive landscape and main competitors.
+   Once parallel extraction is done, the **Merge Tool** synthesizes the data into a single company dossier.
+3. **Debate Node (`bullBearAgent.ts`)**: Simulates a debate, generating structured bull and bear case arguments with severity ratings and citations.
+4. **Verdict Node (`verdictAgent.ts`)**: Computes scores (1-10) for 5 core dimensions, categorizes risk items, builds a SWOT matrix, drafts a 3-paragraph editorial narrative, and derives the final verdict (`Invest` / `Watch` / `Pass`) and confidence rating.
 
 ---
 
-## Upcoming (Day 6+)
-- Explain button (drill into any score dimension)
-- Executive summary export
-- Follow-up conversational chat
+## Key decisions & trade-offs
+
+- **Split Vercel / Render Deployment**: We chose to deploy the frontend on Vercel and the backend on Render. Vercel's serverless functions enforce strict request execution time limits (typically 10-60 seconds on free tiers) which do not support the persistent connection required by the Server-Sent Events (SSE) streaming. Render web services allow long-running, stateful server processes, supporting reliable stream connections.
+- **Gemini-Primary with Groq-Fallback Wrapper**: Implemented in `backend/src/lib/llm.ts`, the LLM wrapper automatically fails over from Gemini (`gemini-2.0-flash`) to Groq (`llama-3.3-70b-versatile`) if rate limits or quota errors are hit. If both fail, it falls back to a smaller, faster model (`llama-3.1-8b-instant`) to preserve system uptime.
+- **Scores-Driven Verdict**: The recommendation (Invest / Watch / Pass) and confidence percentage are calculated programmatically in typescript using a composite formula based on numerical scorecard inputs. This ensures logical alignment between scores and the final verdict stamp, rather than letting the LLM hallucinate contradictory ratings.
+- **Local Multi-Turn Chat Context Window**: The Follow-Up Chat maintains conversation memory by appending the last 6 messages to each outgoing request to `/api/followup`. This maintains high conversational coherence while staying safely within LLM context tokens limit.
 
 ---
 
-## License
+## Example runs
 
-MIT
+Below is a typical report dossier generated by the agent for **Tesla**:
 
+- **Verdict**: `Watch` (Confidence: `65%`)
+- **Key Dimension Scores**:
+  - Market Opportunity: `8/10`
+  - Financial Health: `6/10`
+  - Execution Team: `7/10`
+  - Competitive Moat: `6/10`
+  - Risk Level: `6/10` (High)
+- **Swot Matrix**:
+  - *Strengths*: Global brand recognition, vertical integration, autopilot IP.
+  - *Weaknesses*: Capital intensive manufacturing, high CEO dependency.
+  - *Opportunities*: Energy storage scaling, autonomous ride-hailing networks.
+  - *Threats*: Margin pressure from Chinese EV competitors, regulatory scrutiny on FSD.
+- **Follow-up Chat Example**:
+  - *User*: "Why is the risk level rated at 6?"
+  - *Assistant*: "The risk rating is elevated due to ongoing regulatory scrutiny into full self-driving features and margin compression from lower-priced competitors."
+
+---
+
+## What I would improve with more time
+
+1. **Caching Layer**: Store research results in Redis. Companies like Tesla or Apple don't need a fresh multi-minute web search and LLM extraction on every search. Caching would make identical queries load instantly.
+2. **Dynamic Search Queries**: Enhance the resolver to extract search queries based on the resolved industry sector, improving the relevancy of Tavily snippets.
+3. **Cost and Token Optimization**: Summarize or truncate large raw search snippets before sending them to the LLM to avoid context size inflation and rate limit triggers.
+4. **Export Options**: Add a PDF/Dossier generation feature to let users download the final research report.

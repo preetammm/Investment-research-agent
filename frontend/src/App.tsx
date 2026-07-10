@@ -8,6 +8,9 @@ import { EvidenceDashboard } from './components/EvidenceDashboard';
 import { RiskAnalysis } from './components/RiskAnalysis';
 import { SwotGrid } from './components/SwotGrid';
 import { BullBearDebate } from './components/BullBearDebate';
+import { ExplainButton } from './components/ExplainButton';
+import { FollowUpChat } from './components/FollowUpChat';
+import { ExecutiveSummary } from './components/ExecutiveSummary';
 
 function App() {
   const [selectedCompany, setSelectedCompany] = useState<string | null>(null);
@@ -32,7 +35,7 @@ function App() {
       {/* Header */}
       <header className="w-full max-w-6xl mx-auto px-6 py-6 flex justify-between items-center border-b border-slate-light">
         <span className="font-mono text-xs tracking-wider text-ink font-bold">RESEARCH_AGENT_V1.0</span>
-        <span className="font-mono text-xs text-ink-faint">DAY_5_EVIDENCE_SUITE</span>
+        <span className="font-mono text-xs text-ink-faint">DAY_6_EXPLAIN_&_CHAT</span>
       </header>
 
       {/* Main Content */}
@@ -101,6 +104,32 @@ function App() {
                   <BullBearDebate debate={researchState.debate} />
                 )}
 
+                <SectionDivider />
+
+                {/* ── Explain This To Me ── */}
+                {researchState.thesis && researchState.dossier && (
+                  <ExplainButton
+                    companyName={researchState.companyName}
+                    thesis={researchState.thesis}
+                    dossier={researchState.dossier}
+                  />
+                )}
+
+                <SectionDivider />
+
+                {/* ── Follow-up Chat ── */}
+                <FollowUpChat researchState={researchState} />
+
+                <SectionDivider />
+
+                {/* ── Executive Summary ── */}
+                {researchState.thesis && (
+                  <ExecutiveSummary
+                    companyName={researchState.companyName}
+                    thesis={researchState.thesis}
+                  />
+                )}
+
                 {/* New Investigation button */}
                 <div className="w-full border-t border-slate-light pt-6 flex justify-center">
                   <button
@@ -126,3 +155,4 @@ function App() {
 }
 
 export default App;
+

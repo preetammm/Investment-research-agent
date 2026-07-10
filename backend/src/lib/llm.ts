@@ -163,3 +163,98 @@ export async function callJSON<T>(options: CallOptions): Promise<T> {
     throw new Error(`LLM output could not be parsed as JSON: ${parseError.message}`);
   }
 }
+
+/**
+ * A single message in a multi-turn chat conversation.
+ */
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+/**
+ * Calls the LLM provider with a full multi-turn conversation history.
+ * Uses Gemini as primary and falls back to Groq if Gemini fails.
+ * This is the mechanism that gives the chat "memory" — the full history
+ * is resent every call since the model retains nothing between requests.
+ */
+export async function callChat(options: {
+  system: string;
+  history: ChatMessage[];
+  maxTokens?: number;
+}): Promise<string> {
+  const { system, history, maxTokens } = options;
+
+  // 1. Try Gemini
+  try {
+    const genAI = getGeminiClient();
+    const model = genAI.getGenerativeModel({
+      model: 'gemini-2.0-flash',
+      systemInstruction: system,
+    });
+
+    // Convert ChatMessage[] to Gemini's content format
+    const contents = history.map((msg) => ({
+      role: msg.role === 'assistant' ? 'model' : 'user',
+      parts: [{ text: msg.content }],
+    }));
+
+    const response = await model.generateContent({
+      contents,
+      generationConfig: maxTokens ? { maxOutputTokens: maxTokens } : undefined,
+    });
+
+    const text = response.response.text();
+    if (!text) {
+      throw new Error('Gemini returned an empty chat response');
+    }
+    return text;
+  } catch (geminiError: any) {
+    const errorMsg = geminiError.message || String(geminiError);
+    console.warn(`[callChat] Gemini failed, falling back to Groq: ${errorMsg}`);
+
+    // 2. Fallback to Groq
+    try {
+      const groq = getGroqClient();
+
+      // Convert ChatMessage[] to Groq's message format
+      const messages: { role: 'system' | 'user' | 'assistant'; content: string }[] = [
+        { role: 'system', content: system },
+        ...history.map((msg) => ({
+          role: msg.role as 'user' | 'assistant',
+          content: msg.content,
+        })),
+      ];
+
+      let text = '';
+      try {
+        const completion = await groq.chat.completions.create({
+          model: 'llama-3.3-70b-versatile',
+          messages,
+          max_tokens: maxTokens,
+        });
+        text = completion.choices[0]?.message?.content || '';
+      } catch (firstGroqError: any) {
+        console.warn(`[callChat] Llama 3.3 failed, falling back to Llama 3.1 8B: ${firstGroqError.message || firstGroqError}`);
+        const completion = await groq.chat.completions.create({
+          model: 'llama-3.1-8b-instant',
+          messages,
+          max_tokens: maxTokens,
+        });
+        text = completion.choices[0]?.message?.content || '';
+      }
+
+      if (!text) {
+        throw new Error('Groq returned an empty chat response');
+      }
+      return text;
+    } catch (groqError: any) {
+      const groqErrorMsg = groqError.message || String(groqError);
+      console.error(`[callChat] Groq also failed: ${groqErrorMsg}`);
+      throw new Error(
+        `Both Gemini and Groq providers failed.\nGemini Error: ${errorMsg}\nGroq Error: ${groqErrorMsg}`
+      );
+    }
+  }
+}
+

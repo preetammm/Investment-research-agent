@@ -85,12 +85,21 @@ export async function runVerdictAgent(
   biggestRisk: string;
   narrative: string;
 }> {
+  // ── DIAGNOSTIC: log what the fallback guard sees ──
+  console.log(`[verdictAgent] ── FALLBACK GUARD CHECK ──`);
+  console.log(`[verdictAgent]   dossier.summary: "${dossier.summary?.slice(0, 120)}..."`);
+  console.log(`[verdictAgent]   dossier.dataGaps: ${JSON.stringify(dossier.dataGaps)}`);
+  console.log(`[verdictAgent]   includes 'No web search results available': ${dossier.dataGaps.includes('No web search results available')}`);
+  console.log(`[verdictAgent]   summary falsy: ${!dossier.summary}`);
+  console.log(`[verdictAgent]   summary includes 'No public corporate information': ${dossier.summary?.includes('No public corporate information')}`);
+
   // Graceful empty fallback
   if (
     dossier.dataGaps.includes('No web search results available') ||
     !dossier.summary ||
     dossier.summary.includes('No public corporate information')
   ) {
+    console.warn(`[verdictAgent] ⚠️  FALLBACK TRIGGERED — returning default empty scores. This means the dossier was considered empty.`);
     return {
       scores: {
         marketOpportunity: 1,
@@ -110,6 +119,8 @@ export async function runVerdictAgent(
     };
   }
 
+  console.log(`[verdictAgent] ✓ Fallback NOT triggered — proceeding to LLM call.`);
+
   const result = await callJSONWithRetry<RawVerdictResponse>({
     system: VERDICT_SYSTEM,
     user: `Please analyze the following Company Dossier and Bull/Bear Debate to formulate the final verdict.
@@ -120,6 +131,16 @@ ${JSON.stringify(dossier, null, 2)}
 Debate:
 ${JSON.stringify(debate, null, 2)}`,
   });
+
+  // ── DIAGNOSTIC: log the parsed verdict result ──
+  console.log(`[verdictAgent] ── RAW PARSED LLM RESULT ──`);
+  console.log(`[verdictAgent]   scores: ${JSON.stringify(result.scores)}`);
+  console.log(`[verdictAgent]   risks (${result.risks?.length || 0}): ${JSON.stringify(result.risks)}`);
+  console.log(`[verdictAgent]   swot.strengths: ${JSON.stringify(result.swot?.strengths)}`);
+  console.log(`[verdictAgent]   swot.weaknesses: ${JSON.stringify(result.swot?.weaknesses)}`);
+  console.log(`[verdictAgent]   swot.opportunities: ${JSON.stringify(result.swot?.opportunities)}`);
+  console.log(`[verdictAgent]   swot.threats: ${JSON.stringify(result.swot?.threats)}`);
+  console.log(`[verdictAgent]   oneLineSummary: "${result.oneLineSummary}"`);
 
   return result;
 }

@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: investment-research-backend
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 4000
+      - key: GEMINI_API_KEY
+        sync: false # Set manually in Render dashboard
+      - key: GROQ_API_KEY
+        sync: false # Set manually in Render dashboard
+      - key: TAVILY_API_KEY
+        sync: false # Set manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false # Set to Vercel app URL manually

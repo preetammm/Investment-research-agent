@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { motion, type Variants, AnimatePresence } from 'framer-motion';
+import { API_BASE_URL } from '../lib/config';
 
 interface CompanyInputProps {
   onCompanyConfirmed: (name: string) => void;
@@ -25,7 +26,7 @@ export const CompanyInput = ({ onCompanyConfirmed }: CompanyInputProps) => {
     setAlternatives([]);
 
     try {
-      const response = await fetch('http://localhost:4000/api/resolve', {
+      const response = await fetch(`${API_BASE_URL}/api/resolve`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

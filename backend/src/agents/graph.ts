@@ -36,13 +36,16 @@ async function researchNode(state: typeof ResearchStateAnnotation.State, config?
  */
 async function debateNode(state: typeof ResearchStateAnnotation.State, config?: any) {
   if (state.error) return {};
+  console.time('[timer]: debateNode');
   try {
     if (!state.dossier) {
       throw new Error('Dossier is missing for debate stage');
     }
     const debate = await runBullBearAgent(state.dossier);
+    console.timeEnd('[timer]: debateNode');
     return { debate };
   } catch (err: any) {
+    console.timeEnd('[timer]: debateNode');
     console.error('[graph-debate]: Debate node execution failed:', err);
     return { error: err.message || String(err) };
   }
@@ -56,6 +59,7 @@ async function verdictNode(state: typeof ResearchStateAnnotation.State, config?:
   if (state.error) return {};
   const onStep = config?.configurable?.onStep || (() => {});
 
+  console.time('[timer]: verdictNode');
   try {
     if (!state.dossier || !state.debate) {
       throw new Error('Required dossier or debate state missing for verdict stage');
@@ -91,12 +95,14 @@ async function verdictNode(state: typeof ResearchStateAnnotation.State, config?:
       scores: rawVerdict.scores,
     };
 
+    console.timeEnd('[timer]: verdictNode');
     return {
       risks: rawVerdict.risks,
       swot: rawVerdict.swot,
       thesis,
     };
   } catch (err: any) {
+    console.timeEnd('[timer]: verdictNode');
     console.error('[graph-verdict]: Verdict node execution failed:', err);
     return { error: err.message || String(err) };
   }

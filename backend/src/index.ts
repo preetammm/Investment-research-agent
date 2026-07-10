@@ -7,6 +7,8 @@ import express from 'express';
 import cors from 'cors';
 import resolveRouter from './routes/resolve';
 import researchRouter from './routes/research';
+import explainRouter from './routes/explain';
+import followupRouter from './routes/followup';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -23,17 +25,19 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(null, true); // Allow all in production since Vercel handles same-origin
+      callback(new Error('Not allowed by CORS'));
     }
   },
   credentials: true
 }));
 
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 
-// Register Resolve and Research API Routes
+// Register API Routes
 app.use('/api', resolveRouter);
 app.use('/api', researchRouter);
+app.use('/api', explainRouter);
+app.use('/api', followupRouter);
 
 // Health Check Route
 app.get('/api/health', (req, res) => {

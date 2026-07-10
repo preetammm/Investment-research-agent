@@ -226,11 +226,14 @@ export async function runResearchTools(
 
   // Helper to run a tool, report completion, and return result
   const runAndReport = async <T>(step: StepId, toolFn: () => Promise<T>): Promise<T> => {
+    console.time(`[timer]: ${step}`);
     try {
       const result = await toolFn();
+      console.timeEnd(`[timer]: ${step}`);
       onStep({ type: 'step', step, status: 'done' });
       return result;
     } catch (err) {
+      console.timeEnd(`[timer]: ${step}`);
       console.error(`Error in tool execution for step ${step}:`, err);
       onStep({ type: 'step', step, status: 'done' });
       throw err;
@@ -288,10 +291,12 @@ export async function runResearchTools(
     dataGaps: string[];
   }
 
+  console.time(`[timer]: merging_dossier`);
   const mergeResult = await callJSONWithRetry<MergeResult>({
     system: MERGE_SYSTEM,
     user: `Here are the gathered research facts about "${companyName}". Please analyze and merge them:\n\n${JSON.stringify(inputForMerge, null, 2)}`,
   });
+  console.timeEnd(`[timer]: merging_dossier`);
 
   onStep({ type: 'step', step: 'merging_dossier', status: 'done' });
 

@@ -41,7 +41,17 @@ function App() {
       {/* Header */}
       <header className="w-full max-w-[720px] mx-auto px-6 py-6 flex justify-between items-center border-b border-slate-light">
         <span className="font-mono text-xs tracking-widest text-ink font-bold">DOSSIER</span>
-        <span className="font-mono text-xs text-ink-faint">INVESTMENT_RESEARCH</span>
+        <div className="flex items-center gap-4">
+          <span className="font-mono text-xs text-ink-faint">Investment Research</span>
+          {selectedCompany && researchState && (
+            <button
+              onClick={handleReset}
+              className="font-mono text-[10px] tracking-widest uppercase border border-ink/20 text-ink-faint hover:text-ink hover:border-ink px-3 py-1.5 transition-all duration-200 cursor-pointer"
+            >
+              New Investigation
+            </button>
+          )}
+        </div>
       </header>
 
       {/* Main Content */}
@@ -137,12 +147,12 @@ function App() {
                 )}
 
                 {/* New Investigation button */}
-                <div className="w-full border-t border-slate-light pt-6 flex justify-center">
+                <div className="w-full border-t border-slate-light pt-8 flex justify-center">
                   <button
                     onClick={handleReset}
-                    className="font-mono text-[10px] tracking-widest text-ink-faint hover:text-ink hover:underline cursor-pointer font-bold transition-colors uppercase"
+                    className="bg-ink hover:bg-ink-soft text-paper font-mono text-xs uppercase tracking-[0.15em] py-3 px-8 border border-transparent transition-all duration-300 active:scale-[0.98] cursor-pointer select-none"
                   >
-                    [ NEW_INVESTIGATION ]
+                    Start New Investigation
                   </button>
                 </div>
               </div>

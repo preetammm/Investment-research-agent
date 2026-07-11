@@ -83,7 +83,7 @@ export const ThesisCard = ({
       {/* Narrative overview */}
       <div className="flex-grow space-y-3">
         <div className="font-mono text-[10px] tracking-widest text-ink-faint uppercase">
-          {companyName} // INVESTMENT_THESIS
+          {companyName} — Investment Thesis
         </div>
 
         <h3 className="font-serif italic text-2xl md:text-3xl text-ink leading-tight">
@@ -91,7 +91,7 @@ export const ThesisCard = ({
         </h3>
 
         <div className="flex items-center space-x-2 pt-1">
-          <span className="font-mono text-xs text-ink-faint">CONFIDENCE_RATING:</span>
+          <span className="font-mono text-xs text-ink-faint">Confidence:</span>
           <span className={`font-mono text-xs font-bold ${theme.text}`}>{confidence}%</span>
           <div className="w-24 h-1.5 bg-slate-light rounded-sm overflow-hidden">
             <motion.div

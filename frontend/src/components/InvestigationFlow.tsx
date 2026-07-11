@@ -50,8 +50,8 @@ export const InvestigationFlow = ({ steps, companyName }: InvestigationFlowProps
     >
       {/* Dossier header metadata */}
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 border-b border-slate-light pb-4 mb-6 font-mono text-[10px] tracking-widest text-ink-faint">
-        <span>CASE FILE: #{companyName.toUpperCase().replace(/\s+/g, '_')}_INVESTIGATION</span>
-        <span>STATUS: IN_PROGRESS</span>
+        <span>Case File: {companyName}</span>
+        <span>Status: In Progress</span>
       </div>
 
       <h2 className="font-serif italic text-2xl text-ink mb-6">

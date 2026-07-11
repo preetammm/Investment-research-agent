@@ -42,7 +42,7 @@ export const StoryReport = ({ narrative }: StoryReportProps) => {
       className="w-full bg-paper border border-slate-light p-8 rounded-sm shadow-sm text-left select-none space-y-6"
     >
       <div className="border-b border-slate-light pb-3 font-mono text-[10px] tracking-widest text-ink-faint uppercase">
-        ANALYST_NARRATIVE // DEEP_DIVE
+        Analyst Narrative
       </div>
 
       <div className="space-y-5">

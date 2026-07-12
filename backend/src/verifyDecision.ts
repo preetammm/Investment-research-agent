@@ -66,11 +66,8 @@ async function verifyCompany(companyName: string) {
 }
 
 async function main() {
-  // Test 1: Strong company (Notion)
-  await verifyCompany('Notion');
-
-  // Test 2: Collapsed / Weak fundamentals company (Juicero)
-  await verifyCompany('Juicero');
+  await verifyCompany('Tesla');
+  await verifyCompany('Microsoft');
 }
 
 main().catch(console.error);

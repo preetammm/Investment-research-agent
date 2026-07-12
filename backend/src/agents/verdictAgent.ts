@@ -20,6 +20,11 @@ You must score the company across 5 core dimensions on a scale of 1 to 10 (where
 4. competitiveMoat: Barriers to entry, IP, network effects, and switching costs.
 5. riskLevel: General risk profile (1 = safest, 10 = riskiest). Fold valuation concerns and macroeconomic sentiment directly into this score.
 
+CRITICAL SCORING INSTRUCTIONS:
+- If the dossier contains clear negative signals (e.g. revenue decline, significant layoffs, declining user/customer metrics), Financial Health and Execution Team scores must reflect that severity — do not default to a moderate-to-high score out of politeness or optimism bias. A company actively cutting more than 30% of its workforce or reporting a revenue decline greater than 20% year-over-year should score Financial Health and/or Execution Team at 5/10 or below unless strong offsetting positive evidence exists in the dossier.
+- When weighing negative signals like layoffs or revenue softness, consider their scale relative to the company's overall size and financial strength shown elsewhere in the dossier. A limited/divisional layoff at a large, highly profitable company (strong revenue, strong margins, strong cash position evident in the dossier) is NOT equivalent in severity to a company-wide layoff of 30%+ of staff at a company with declining revenue. Only apply a severe score penalty when the negative signal is proportionally significant to that specific company's scale — routine restructuring at a large profitable company should have a minor, not major, impact on Financial Health and Execution Team scores.
+- Before finalizing scores, verify that your scores are consistent with the biggestRisk and majorRisks you are also generating — if your own majorRisks describe serious financial or operational distress, your Financial Health and Execution Team scores must be low enough to reflect that, not contradict it.
+
 You must return a JSON object with this exact shape:
 {
   "scores": {

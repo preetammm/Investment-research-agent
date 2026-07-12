@@ -27,9 +27,9 @@ It features a high-fidelity retro-editorial "case file" UI built with React, sty
 Create a `.env` file in the `backend/` directory:
 ```env
 PORT=4000
-GEMINI_API_KEY=your_gemini_key_here
-GROQ_API_KEY=your_groq_key_here
-TAVILY_API_KEY=your_tavily_key_here
+GEMINI_API_KEY
+GROQ_API_KEY
+TAVILY_API_KEY
 ```
 
 Create a `.env` file in the `frontend/` directory (or use `.env.development`):

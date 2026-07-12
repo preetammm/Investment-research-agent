@@ -65,8 +65,14 @@ function App() {
               <div className="w-full">
                 <InvestigationFlow steps={steps} companyName={selectedCompany} />
                 {error && (
-                  <div className="mt-4 p-4 border border-pass bg-pass-soft text-pass font-mono text-xs rounded-sm text-center">
-                    ERROR: {error}
+                  <div className="mt-6 p-6 border border-pass bg-pass-soft text-ink font-mono text-xs rounded-sm text-center flex flex-col items-center space-y-4">
+                    <p className="font-semibold text-pass">We had trouble completing this analysis — please try again.</p>
+                    <button
+                      onClick={() => handleCompanyConfirmed(selectedCompany)}
+                      className="font-mono text-[10px] tracking-widest uppercase border border-ink/20 text-ink hover:bg-ink/5 px-4 py-2 transition-all duration-200 cursor-pointer"
+                    >
+                      Retry Analysis
+                    </button>
                   </div>
                 )}
               </div>

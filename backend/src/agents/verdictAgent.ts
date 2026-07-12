@@ -36,8 +36,8 @@ You must return a JSON object with this exact shape:
   },
   "risks": [
     {
-      "category": "Competition" | "Regulation" | "Debt" | "Innovation" | "Market Conditions", // Must be exactly one of these strings
-      "severity": "low" | "medium" | "high",
+      "category": "Competition", // Must be exactly one of: "Competition", "Regulation", "Debt", "Innovation", "Market Conditions"
+      "severity": "medium", // Must be exactly one of: "low", "medium", "high"
       "detail": "Specific detail about the risk."
     }
   ],
@@ -136,6 +136,7 @@ ${JSON.stringify(stripDossierForLLM(dossier), null, 2)}
 
 Debate:
 ${JSON.stringify(debate, null, 2)}`,
+    maxTokens: 4000,
   });
 
   // ── DIAGNOSTIC: log the parsed verdict result ──

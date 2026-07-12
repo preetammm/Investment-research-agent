@@ -66,8 +66,14 @@ async function verifyCompany(companyName: string) {
 }
 
 async function main() {
+  console.log("--- STARTING 3 RUNS FOR REEBOK ---");
+  await verifyCompany('Reebok');
+  await verifyCompany('Reebok');
+  await verifyCompany('Reebok');
+  console.log("--- STARTING 1 RUN FOR TESLA, MICROSOFT, PELOTON ---");
   await verifyCompany('Tesla');
   await verifyCompany('Microsoft');
+  await verifyCompany('Peloton');
 }
 
 main().catch(console.error);
